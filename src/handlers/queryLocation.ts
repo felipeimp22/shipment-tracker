@@ -9,10 +9,26 @@ export const handler: APIGatewayProxyHandler = async (event, context) => {
   try {
     await connectDB();
 
+    let jobId =
+      event.pathParameters?.jobId || // AWS/Local
+      event.queryStringParameters?.jobId || // Netlify redirect
+      null;
+
+    // If still no jobId, try extracting from path
+    if (!jobId && event.path) {
+      const cleanPath = event.path.split('?')[0];
+      const pathSegments = cleanPath.split('/');
+      const lastSegment = pathSegments[pathSegments.length - 1];
+
+      if (lastSegment && lastSegment.startsWith('B')) {
+        jobId = lastSegment;
+      }
+    }
+
     let validatedData;
     try {
       validatedData = await queryJobSchema.validate({
-        jobId: event.pathParameters?.jobId,
+        jobId: jobId,
       });
     } catch (validationError: any) {
       return {

@@ -1,7 +1,7 @@
 [build]
-  command = "npm run build"
+  command = "npm install && npm run build && mkdir -p public && echo 'API only' > public/index.html"
   functions = "dist/handlers"
-  publish = "."
+  publish = "public"
 
 [build.environment]
   NODE_VERSION = "18"
@@ -18,5 +18,5 @@
 
 [[redirects]]
   from = "/location/:jobId"
-  to = "/.netlify/functions/queryLocation"
+  to = "/.netlify/functions/queryLocation?jobId=:jobId"
   status = 200

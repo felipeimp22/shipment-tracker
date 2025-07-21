@@ -10,7 +10,7 @@ export interface LocationData {
   shipment: string;
   latitude: string;
   longitude: string;
-  status?: string; 
+  status?: string;
 }
 
 export interface IShipment extends Document {

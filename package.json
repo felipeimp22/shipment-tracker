@@ -5,6 +5,8 @@
   "scripts": {
     "dev": "serverless offline start",
     "build": "tsc",
+    "build:netlify": "tsc && npm run copy:netlify",
+    "copy:netlify": "mkdir -p netlify/functions && cp -r dist/handlers/* netlify/functions/",
     "deploy": "serverless deploy",
     "lint": "eslint src/**/*.ts",
     "lintFix": "eslint src/**/*.ts --fix",

@@ -1,0 +1,25 @@
+[build]
+  command = "npm run build:netlify"
+  functions = "netlify/functions"
+  publish = "public"
+
+[build.environment]
+  NODE_VERSION = "18"
+
+[[redirects]]
+  from = "/webhook/job"
+  to = "/.netlify/functions/jobWebhook"
+  status = 200
+
+[[redirects]]
+  from = "/webhook/location"
+  to = "/.netlify/functions/locationWebhook"
+  status = 200
+
+[[redirects]]
+  from = "/location/:jobId"
+  to = "/.netlify/functions/queryLocation/:jobId"
+  status = 200
+
+[functions]
+  node_bundler = "esbuild"

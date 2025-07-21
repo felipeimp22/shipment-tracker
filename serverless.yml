@@ -1,0 +1,107 @@
+service: shipment-tracker
+
+frameworkVersion: '4'
+
+plugins:
+  - serverless-auto-swagger
+  - serverless-offline
+
+custom:
+  autoswagger:
+    title: 'Shipment Tracker API'
+    apiType: 'httpApi'
+    generateSwaggerOnDeploy: true
+    typefiles: ['./src/types/api.types.ts']
+    basePath: '/'
+    schemes: ['http', 'https']
+  serverless-offline:
+    httpPort: 3000
+    host: 0.0.0.0
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: ${opt:region, 'us-east-1'}
+  stage: ${opt:stage, 'dev'}
+  environment:
+    ENVIRONMENT: ${env:ENVIRONMENT}
+    APP_DB_USER: ${env:APP_DB_USER}
+    APP_DB_PASSWORD: ${env:APP_DB_PASSWORD}
+    APP_DB_HOST_LOCAL: ${env:APP_DB_HOST_LOCAL}
+    APP_DB_HOST_DOCKER: ${env:APP_DB_HOST_DOCKER}
+    APP_DB_HOST_PRD: ${env:APP_DB_HOST_PRD}
+    APP_DB_PORT: ${env:APP_DB_PORT}
+    APP_DB_NAME: ${env:APP_DB_NAME}
+
+build:
+  esbuild:
+    bundle: true
+    minify: false
+    sourcemap: true
+    target: node18
+    platform: node
+    concurrency: 10
+    external:
+      - mongoose
+
+functions:
+  warmup:
+    handler: src/handlers/warmup.handler
+    events:
+      - schedule: rate(5 minutes)
+
+  jobWebhook:
+    handler: src/handlers/jobWebhook.handler
+    events:
+      - httpApi:
+          path: /webhook/job
+          method: post
+          summary: 'Create a new brokerage job'
+          description: 'Webhook endpoint for Cargowise to notify about new jobs'
+          bodyType: 'JobWebhookRequest'
+          responseData:
+            201:
+              description: 'Job created successfully'
+              bodyType: 'JobWebhookResponse'
+            400:
+              description: 'Validation error'
+              bodyType: 'ErrorResponse'
+            409:
+              description: 'Conflict - Job already exists or shipment already associated'
+              bodyType: 'ErrorResponse'
+
+  locationWebhook:
+    handler: src/handlers/locationWebhook.handler
+    events:
+      - httpApi:
+          path: /webhook/location
+          method: post
+          summary: 'Update shipment location and status'
+          description: 'Webhook endpoint for Project44 to send location updates and status'
+          bodyType: 'LocationWebhookRequest'
+          responseData:
+            200:
+              description: 'Location updated and status successfully'
+              bodyType: 'LocationWebhookResponse'
+            400:
+              description: 'Validation error'
+              bodyType: 'ErrorResponse'
+            404:
+              description: 'Shipment not found'
+              bodyType: 'ErrorResponse'
+
+  queryLocation:
+    handler: src/handlers/queryLocation.handler
+    events:
+      - httpApi:
+          path: /location/{jobId}
+          method: get
+          summary: 'Get current location for a job'
+          description: 'Query the current location of a shipment by job ID'
+          responseData:
+            200:
+              description: 'Location retrieved successfully'
+              bodyType: 'QueryLocationResponse'
+            404:
+              description: 'Job not found'
+              bodyType: 'ErrorResponse'

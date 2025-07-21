@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    container_name: shipment-tracker-app
+    ports:
+      - "3000:3000"
+    environment:
+      - APP_DB_USER=admin
+      - APP_DB_PASSWORD=password
+      - APP_DB_HOST_DOCKER=mongo
+      - APP_DB_PORT=27017
+      - APP_DB_NAME=shipment_tracker
+    volumes:
+      - .:/app:delegated
+      - node_modules:/app/node_modules
+    depends_on:
+      - mongo
+    # Remove the command since we'll run it manually
+    stdin_open: true
+    tty: true
+
+  mongo:
+    image: mongo:6
+    container_name: shipment-tracker-db
+    ports:
+      - "27017:27017"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=password
+      - MONGO_INITDB_DATABASE=shipment_tracker
+    volumes:
+      - mongo_data:/data/db
+
+volumes:
+  mongo_data:
+  node_modules:

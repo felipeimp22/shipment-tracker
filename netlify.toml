@@ -1,6 +1,7 @@
 [build]
   command = "npm run build"
   functions = "dist/handlers"
+  publish = "."
 
 [build.environment]
   NODE_VERSION = "18"

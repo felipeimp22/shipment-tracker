@@ -1,5 +1,5 @@
 [build]
-  command = "npm install && npm run build && mkdir -p public && echo 'API only' > public/index.html"
+  command = "npm install && npm run build"
   functions = "dist/handlers"
   publish = "public"
 

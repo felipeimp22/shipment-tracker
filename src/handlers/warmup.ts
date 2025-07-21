@@ -1,4 +1,3 @@
-// src/handlers/warmup.ts
 import { APIGatewayProxyHandler } from 'aws-lambda';
 import { connectDB } from '../config/database';
 

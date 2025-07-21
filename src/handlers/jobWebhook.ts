@@ -9,7 +9,6 @@ export const handler: APIGatewayProxyHandler = async (event, context) => {
   try {
     await connectDB();
 
-    // Parse and validate input
     const body = JSON.parse(event.body || '{}');
 
     let validatedData;
@@ -28,7 +27,6 @@ export const handler: APIGatewayProxyHandler = async (event, context) => {
       };
     }
 
-    // Create job with business logic validation
     try {
       const result = await shipmentService.createJob(validatedData);
 

@@ -7,7 +7,7 @@ const LocationSchema = new Schema(
     longitude: { type: String, required: true },
   },
   { _id: false }
-); // Disable _id for subdocument
+);
 
 const ShipmentSchema = new Schema<IShipment>(
   {
@@ -17,7 +17,7 @@ const ShipmentSchema = new Schema<IShipment>(
     location: { type: LocationSchema, required: false },
   },
   {
-    timestamps: true, // This automatically manages createdAt and updatedAt
+    timestamps: true,
   }
 );
 

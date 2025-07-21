@@ -1,6 +1,5 @@
 import * as yup from 'yup';
 
-// Custom geocoordinate validation
 const isValidLatitude = (value: string | undefined): boolean => {
   if (!value) return false;
   const lat = parseFloat(value);
@@ -13,7 +12,6 @@ const isValidLongitude = (value: string | undefined): boolean => {
   return !isNaN(lng) && lng >= -180 && lng <= 180;
 };
 
-// Job webhook validation schema
 export const jobWebhookSchema = yup
   .object({
     job: yup
@@ -34,7 +32,6 @@ export const jobWebhookSchema = yup
   })
   .noUnknown(true, 'Unknown fields are not allowed');
 
-// Location webhook validation schema
 export const locationWebhookSchema = yup
   .object({
     shipment: yup
@@ -60,7 +57,6 @@ export const locationWebhookSchema = yup
   })
   .noUnknown(true, 'Unknown fields are not allowed');
 
-// Query validation schema
 export const queryJobSchema = yup.object({
   jobId: yup
     .string()

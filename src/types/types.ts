@@ -10,7 +10,7 @@ export interface LocationData {
   shipment: string;
   latitude: string;
   longitude: string;
-  status?: string; // Optional status field
+  status?: string; 
 }
 
 export interface IShipment extends Document {
@@ -25,7 +25,6 @@ export interface IShipment extends Document {
   updatedAt: Date;
 }
 
-// to do: Use in the validators for path parameter validation
 export interface QueryJobParams {
   jobId: string;
 }

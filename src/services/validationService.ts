@@ -1,12 +1,6 @@
 import { Shipment } from '../models/Shipment';
 
 export class ValidationService {
-  /**
-   * Validates if a job can be created with the given data
-   * Business Rules:
-   * 1. Job ID must be unique
-   * 2. Shipment ID cannot be associated with another job
-   */
   async validateJobCreation(
     jobId: string,
     shipmentId: string
@@ -47,7 +41,6 @@ export class ValidationService {
       };
     }
 
-    // Check if shipment is in a valid status for location updates
     if (shipment.status === 'DELIVERED' || shipment.status === 'CANCELLED') {
       return {
         isValid: false,

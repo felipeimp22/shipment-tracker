@@ -1,10 +1,8 @@
-// src/config/database.ts
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 
 dotenv.config();
 
-// These variables persist between Lambda invocations in the same container
 let cachedConnection: typeof mongoose | null = null;
 let connectionPromise: Promise<typeof mongoose> | null = null;
 

@@ -246,7 +246,7 @@ We use Yup for schema validation with the following rules:
 
 1. **Job ID Pattern**: Must match `B00000000` (B followed by 8 digits)
 2. **Shipment ID Pattern**: Must match `ABCD12345678` (4 letters followed by 8 digits)
-3. **Status Values**: Only accepts `ADDED`.
+3. **Status Values**: Only accepts `ADDED`, `IN_TRANSIT`, `DELIVERED`, `CANCELLED`
 4. **Coordinates**:
    - Latitude: Must be between -90 and 90
    - Longitude: Must be between -180 and 180
@@ -429,6 +429,7 @@ shipment-tracker/
 │   │   ├── shipmentService.ts # Business logic
 │   │   └── validationService.ts # Business validation rules
 │   ├── types/
+│   │   ├── api.types.ts   # serverless use it to generate the swagger
 │   │   └── types.ts       # TypeScript interfaces
 │   └── validators/
 │       └── shipmentValidators.ts # Yup schemas

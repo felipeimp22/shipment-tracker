@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shipment Tracker API Documentation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f5f5f5;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 2rem 0;
+            margin-bottom: 2rem;
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .endpoint {
+            background-color: white;
+            border-radius: 8px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .endpoint h2 {
+            color: #2c3e50;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .method {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.875rem;
+            font-weight: bold;
+            color: white;
+        }
+        
+        .method.post {
+            background-color: #27ae60;
+        }
+        
+        .method.get {
+            background-color: #3498db;
+        }
+        
+        .url {
+            font-family: 'Courier New', monospace;
+            background-color: #f4f4f4;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            margin: 1rem 0;
+            display: inline-block;
+            color: #e74c3c;
+        }
+        
+        .description {
+            color: #666;
+            margin-bottom: 1.5rem;
+        }
+        
+        .code-block {
+            background-color: #2c3e50;
+            color: #ecf0f1;
+            padding: 1rem;
+            border-radius: 4px;
+            overflow-x: auto;
+            margin: 1rem 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+        }
+        
+        .response {
+            background-color: #ecf0f1;
+            color: #2c3e50;
+            padding: 1rem;
+            border-radius: 4px;
+            margin: 1rem 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            white-space: pre-wrap;
+        }
+        
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin-top: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: #2c3e50;
+        }
+        
+        .overview {
+            background-color: white;
+            border-radius: 8px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .overview h2 {
+            color: #2c3e50;
+            margin-bottom: 1rem;
+        }
+        
+        .overview ul {
+            margin-left: 2rem;
+            color: #666;
+        }
+        
+        .overview li {
+            margin-bottom: 0.5rem;
+        }
+        
+        .status-codes {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 0.5rem 1rem;
+            margin-top: 1rem;
+        }
+        
+        .status-code {
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .status-description {
+            color: #666;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 3rem;
+            padding: 2rem;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🚚 Shipment Tracker API</h1>
+            <p class="subtitle">Real-time shipment location tracking system</p>
+        </header>
+        
+        <div class="overview">
+            <h2>Overview</h2>
+            <p>This API connects Cargowise job creation with Project44 location tracking, providing real-time shipment location updates.</p>
+            <ul>
+                <li>Create and manage brokerage jobs</li>
+                <li>Update shipment locations in real-time</li>
+                <li>Query current location by job ID</li>
+                <li>Track shipment status through lifecycle</li>
+            </ul>
+        </div>
+        
+        <!-- Create Job Endpoint -->
+        <div class="endpoint">
+            <h2>
+                <span class="method post">POST</span>
+                Create Brokerage Job
+            </h2>
+            <div class="url">/webhook/job</div>
+            <p class="description">
+                Webhook endpoint for Cargowise to notify about new brokerage jobs. Creates a new job and associates it with a shipment.
+            </p>
+            
+            <div class="section-title">Request Body</div>
+            <div class="code-block">
+{
+  "job": "B00001234",        // Job ID (B + 8 digits)
+  "shipment": "ABCD12345678", // Shipment ID (4 letters + 8 digits)
+  "status": "ADDED"           // Initial status
+}</div>
+            
+            <div class="section-title">Success Response (201 Created)</div>
+            <div class="response">{
+  "message": "Job created successfully",
+  "data": {
+    "jobId": "B00001234",
+    "shipmentId": "ABCD12345678",
+    "status": "ADDED",
+    "createdAt": "2025-01-20T10:00:00.000Z",
+    "updatedAt": "2025-01-20T10:00:00.000Z"
+  }
+}</div>
+            
+            <div class="section-title">cURL Example</div>
+            <div class="code-block">curl -X POST https://your-domain.netlify.app/webhook/job \
+  -H "Content-Type: application/json" \
+  -d '{
+    "job": "B00001234",
+    "shipment": "ABCD12345678",
+    "status": "ADDED"
+  }'</div>
+        </div>
+        
+        <!-- Update Location Endpoint -->
+        <div class="endpoint">
+            <h2>
+                <span class="method post">POST</span>
+                Update Shipment Location
+            </h2>
+            <div class="url">/webhook/location</div>
+            <p class="description">
+                Webhook endpoint for Project44 to send real-time location updates. Updates the location coordinates and optionally the status of a shipment.
+            </p>
+            
+            <div class="section-title">Request Body</div>
+            <div class="code-block">
+{
+  "shipment": "ABCD12345678",  // Shipment ID
+  "latitude": "49.0041951",    // Latitude coordinate
+  "longitude": "-122.7322901", // Longitude coordinate
+  "status": "IN_TRANSIT"       // Optional: Update status
+}</div>
+            
+            <div class="section-title">Success Response (200 OK)</div>
+            <div class="response">{
+  "message": "Location updated successfully",
+  "data": {
+    "shipmentId": "ABCD12345678",
+    "jobId": "B00001234",
+    "location": {
+      "latitude": "49.0041951",
+      "longitude": "-122.7322901"
+    },
+    "status": "IN_TRANSIT",
+    "createdAt": "2025-01-20T10:00:00.000Z",
+    "updatedAt": "2025-01-20T10:05:00.000Z"
+  }
+}</div>
+            
+            <div class="section-title">cURL Example</div>
+            <div class="code-block">curl -X POST https://your-domain.netlify.app/webhook/location \
+  -H "Content-Type: application/json" \
+  -d '{
+    "shipment": "ABCD12345678",
+    "latitude": "49.0041951",
+    "longitude": "-122.7322901",
+    "status": "IN_TRANSIT"
+  }'</div>
+        </div>
+        
+        <!-- Query Location Endpoint -->
+        <div class="endpoint">
+            <h2>
+                <span class="method get">GET</span>
+                Query Current Location
+            </h2>
+            <div class="url">/location/{jobId}</div>
+            <p class="description">
+                Query the current location and status of a shipment by its job ID. Returns the latest location if available.
+            </p>
+            
+            <div class="section-title">Path Parameters</div>
+            <div class="code-block">jobId: B00001234  // The job identifier</div>
+            
+            <div class="section-title">Success Response (200 OK)</div>
+            <div class="response">{
+  "job": "B00001234",
+  "shipment": "ABCD12345678",
+  "status": "IN_TRANSIT",
+  "latitude": "49.0041951",      // Only present if location has been set
+  "longitude": "-122.7322901",    // Only present if location has been set
+  "createdAt": "2025-01-20T10:00:00.000Z",
+  "updatedAt": "2025-01-20T10:05:00.000Z"
+}</div>
+            
+            <div class="section-title">cURL Example</div>
+            <div class="code-block">curl https://your-domain.netlify.app/location/B00001234</div>
+        </div>
+        
+        <!-- Status Codes -->
+        <div class="endpoint">
+            <h2>Response Status Codes</h2>
+            <div class="status-codes">
+                <span class="status-code">200 OK</span>
+                <span class="status-description">Request successful (query or update)</span>
+                
+                <span class="status-code">201 Created</span>
+                <span class="status-description">Resource created successfully (new job)</span>
+                
+                <span class="status-code">400 Bad Request</span>
+                <span class="status-description">Invalid request data or validation error</span>
+                
+                <span class="status-code">404 Not Found</span>
+                <span class="status-description">Job or shipment not found</span>
+                
+                <span class="status-code">409 Conflict</span>
+                <span class="status-description">Business rule violation (duplicate job, shipment already associated)</span>
+                
+                <span class="status-code">500 Internal Server Error</span>
+                <span class="status-description">Unexpected server error</span>
+            </div>
+        </div>
+        
+        <!-- Validation Rules -->
+        <div class="endpoint">
+            <h2>Validation Rules</h2>
+            <ul>
+                <li><strong>Job ID:</strong> Must match pattern B followed by 8 digits (e.g., B00001234)</li>
+                <li><strong>Shipment ID:</strong> Must match pattern 4 uppercase letters followed by 8 digits (e.g., ABCD12345678)</li>
+                <li><strong>Status:</strong> Must be one of: ADDED, IN_TRANSIT, DELIVERED, CANCELLED</li>
+                <li><strong>Latitude:</strong> Must be between -90 and 90</li>
+                <li><strong>Longitude:</strong> Must be between -180 and 180</li>
+                <li><strong>Business Rules:</strong>
+                    <ul>
+                        <li>Job IDs must be unique</li>
+                        <li>A shipment can only be associated with one job</li>
+                        <li>DELIVERED and CANCELLED shipments cannot change status</li>
+                        <li>Location updates less than ~11 meters are ignored</li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+        
+        <footer>
+            <p>Shipment Tracker API v1.0.0</p>
+            <p>Built with AWS Lambda, MongoDB, and TypeScript</p>
+        </footer>
+    </div>
+</body>
+</html>

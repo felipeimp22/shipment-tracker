@@ -1,7 +1,6 @@
 [build]
-  command = "npm run build:netlify"
-  functions = "netlify/functions"
-  publish = "public"
+  command = "npm run build"
+  functions = "dist/handlers"
 
 [build.environment]
   NODE_VERSION = "18"
@@ -18,8 +17,5 @@
 
 [[redirects]]
   from = "/location/:jobId"
-  to = "/.netlify/functions/queryLocation/:jobId"
+  to = "/.netlify/functions/queryLocation"
   status = 200
-
-[functions]
-  node_bundler = "esbuild"
